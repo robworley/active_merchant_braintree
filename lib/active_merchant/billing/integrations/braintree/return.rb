@@ -118,6 +118,14 @@ module ActiveMerchant #:nodoc:
             @response == "1"
           end
           
+          def declined?
+            @response == "2"
+          end
+          
+          def error?
+            @response == "3"
+          end
+          
           def message
             @message
           end

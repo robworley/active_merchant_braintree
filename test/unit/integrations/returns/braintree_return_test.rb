@@ -12,18 +12,24 @@ class BraintreeReturnTest < Test::Unit::TestCase
     r = Braintree::Return.new(successful_purchase, :api_key => 'UVgCejU48ANga4mKF77WFXfm2yUve76W')
     assert r.valid?
     assert r.success?
+    assert !r.declined?
+    assert !r.error?
   end
   
-  def test_failed_purchase
-    r = Braintree::Return.new(failed_purchase, :api_key => 'UVgCejU48ANga4mKF77WFXfm2yUve76W')
+  def test_declined_purchase
+    r = Braintree::Return.new(declined_purchase, :api_key => 'UVgCejU48ANga4mKF77WFXfm2yUve76W')
     assert r.valid?
     assert !r.success?
+    assert r.declined?
+    assert !r.error?
   end
   
   def test_erroneous_purchase
     r = Braintree::Return.new(erroneous_purchase, :api_key => 'UVgCejU48ANga4mKF77WFXfm2yUve76W')
     assert r.valid?
     assert !r.success?
+    assert !r.declined?
+    assert r.error?
   end
   
   def test_attribute_mappings
@@ -47,7 +53,7 @@ class BraintreeReturnTest < Test::Unit::TestCase
     'orderid=order-1&amount=25.00&response=1&transactionid=transaction-1&avsresponse=Y&cvvresponse=M&customer_vault_id=customer-1&time=20090717181533&hash=ee10f05e1bd59f4d0094b0be54c87e3b&responsetext=Successful+purchase&authcode=123456'
   end
   
-  def failed_purchase
+  def declined_purchase
     'orderid=order-1&amount=25.00&response=2&transactionid=transaction-1&avsresponse=Y&cvvresponse=M&customer_vault_id=customer-1&time=20090717181533&hash=6e6e4834d4202442d9006e44f9e181d2&responsetext=Insufficient funds'
   end
   
