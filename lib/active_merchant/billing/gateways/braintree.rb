@@ -5,6 +5,10 @@ module ActiveMerchant #:nodoc:
       def api_url 
         'https://secure.braintreepaymentgateway.com/api/transact.php'
       end
+      
+      def report_url
+        'https://secure.braintreepaymentgateway.com/api/query.php'
+      end
     
       self.supported_countries = ['US']
       self.supported_cardtypes = [:visa, :master, :american_express, :discover]

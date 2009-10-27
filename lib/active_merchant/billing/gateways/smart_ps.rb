@@ -113,6 +113,27 @@ module ActiveMerchant #:nodoc:
       end
       
       alias_method :unstore, :delete
+            
+      def retrieve(vault_id)
+        response = query(:customer_vault_id => vault_id, :report_type => 'customer_vault')
+        response['customer_vault']['customer']
+      end
+      
+      def list
+        response = query(:report_type => 'customer_vault')
+        response['customer_vault']['customer']
+      end
+      
+      def list_transactions(vault_id)
+        response = query(:customer_vault_id => vault_id)
+        response
+      end
+      
+      def query(options = {})
+        response_xml = ssl_post(report_url, post_data(nil, options))
+        h = Hash.from_xml(response_xml)
+        h['nm_response']
+      end
 
       private                             
       def add_customer_data(post, options)
