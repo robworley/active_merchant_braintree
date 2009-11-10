@@ -85,6 +85,18 @@ module ActiveMerchant #:nodoc:
         commit(nil, nil, post)
       end
       
+      # Update the contact information stored at the gateway leaving
+      # credit card data as-is.
+      def update_contact_information(vault_id, options = {})
+        post = {}
+        post[:customer_vault] = "update_customer"
+        add_customer_vault_id(post, vault_id)
+        add_address(post, options)
+        add_customer_names(post, options)
+        add_customer_data(post, options)
+        commit(nil, nil, post)
+      end
+      
       # Amend an existing transaction
       def amend(auth, options = {})
         post = {}
@@ -186,6 +198,11 @@ module ActiveMerchant #:nodoc:
         post[:ccexp]  = expdate(creditcard)
         post[:firstname] = creditcard.first_name
         post[:lastname]  = creditcard.last_name   
+      end
+      
+      def add_customer_names(post, options)
+        post[:firstname] = options[:first_name] unless options[:first_name].blank?
+        post[:lastname]  = options[:last_name]  unless options[:last_name].blank?
       end
       
       def add_check(post, check, options)
